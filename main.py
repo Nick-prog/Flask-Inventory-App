@@ -32,7 +32,7 @@ def check_out(Property_Tag):
     print(item)
 
     if item['Status'] == 'Avaliable':
-        inventory_df.loc[inventory_df['Property_Tag'] == Property_Tag, 'Status'] == 'Unavaliable'
+        inventory_df.loc[inventory_df['Property_Tag'] == Property_Tag, 'Status'] = 'Unavaliable'
         print(inventory_df)
         save_inventory(inventory_df)
 
@@ -43,8 +43,8 @@ def check_in(Property_Tag):
     inventory_df = load_inventory()
     item = inventory_df[inventory_df['Property_Tag'] == Property_Tag].iloc[0]
 
-    if item['Status'] == 'Avaliable':
-        inventory_df.loc[inventory_df['Property_Tag'] == Property_Tag, 'Status'] == 'Avaliable'
+    if item['Status'] == 'Unavaliable':
+        inventory_df.loc[inventory_df['Property_Tag'] == Property_Tag, 'Status'] = 'Avaliable'
         save_inventory(inventory_df)
 
     return redirect(url_for('index'))
