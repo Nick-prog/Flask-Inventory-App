@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width-device-width, initial-scale=1.0">
+    <title>Office Inventory System</title>
+    <style>
+        body {font-family: 'Courier New', Courier, monospace; padding: 20px;}
+        table {width: 100%; border-collapse: collapse; margin-bottom: 20px;}
+        table, th, td {border: 1px solid #ddd;}
+        th, td {padding: 10px; text-align: center;}
+        button {padding: 5px 15px; margin: 5px; cursor: pointer;}
+    </style>
+</head>
+<body>
+    <h1>Office Inventory System</h1>
+    <table>
+        <thread>
+            <tr>
+                <th>Property_Tag</th>
+                <th>Serial_Number</th>
+                <th>Service_Tag</th>
+                <th>Type</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thread>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item['Property_Tag'] }}</td>
+                <td>{{ item['Serial_Number'] }}</td>
+                <td>{{ item['Service_Tag'] }}</td>
+                <td>{{ item['Type'] }}</td>
+                <td>{{ item['Location'] }}</td>
+                <td>{{ item['Status'] }}</td>
+                <td>
+                    {% if item['Status'] == 'Avaliable' %}
+                        <form action="{{ url_for('check_out', Property_Tag=item['Property_Tag']) }}" method="post">
+                            <button type = "submit">Check Out</button>
+                        </form>
+                    {% else %}
+                        <form action="{{ url_for('check_in', Property_Tag=item['Property_Tag']) }}" method="post">
+                            <button type = "submit">Check In</button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
