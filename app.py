@@ -1,15 +1,23 @@
 import os
 import pandas as pd
+import io
+import requests
 from flask import Flask, render_template, request, redirect, url_for
 from pandas.errors import EmptyDataError
+from config import EXCEL_FILE, DEBUG
 
 app = Flask(__name__)
 
-EXCEL_FILE = 'Inventory List.xlsx'
-
 def load_inventory():
     try:
-        return pd.read_excel(EXCEL_FILE)
+        if isinstance(EXCEL_FILE, str) and EXCEL_FILE.startswith(('http://', 'https://')):
+            # Fetch from URL
+            response = requests.get(EXCEL_FILE)
+            response.raise_for_status()
+            return pd.read_excel(io.BytesIO(response.content))
+        else:
+            # Local file
+            return pd.read_excel(EXCEL_FILE)
     except (FileNotFoundError, EmptyDataError):
         return pd.DataFrame(columns=["Property_Tag", "Serial_Number", "Service_Tag", "Type", "Location", "Status"])
 
@@ -50,4 +58,4 @@ def check_in(Property_Tag):
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=DEBUG)
